@@ -16,12 +16,20 @@ namespace API.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Song>> GetAllAsync(string? artist, string? songName)
+        public IEnumerable<Song> GetAll(string? artist, string? songName, string? genreName)
         {
-            var result = _repository.Data
-                .Where(song => (artist != null ? song.Artist.ToLower().Contains(artist.ToLower()) : 1 == 1) && (songName != null ? song.Song.ToLower().Contains(songName.ToLower()) : 1 == 1));
-
-            var songsStr = await Task.FromResult(result);
+            var songsStr = _repository.Data
+                .Where(song => (
+                        artist == null || song.Artist.ToLower().Contains(artist.ToLower())
+                    ) &&
+                    (
+                        songName == null || song.Song.ToLower().Contains(songName.ToLower())
+                    ) &&
+                    (
+                        genreName == null || song.Genres.ToLower().Contains(genreName.ToLower())
+                    )
+                )
+                .ToList();
 
             List<Song> songs = new List<Song>();
             foreach (var song in songsStr)
@@ -47,7 +55,7 @@ namespace API.Services
         public List<Song> GetByArtist(string artist, string? songName)
         {
             var songsStr = _repository.Data
-                .Where(song => (song.Artist.ToLower() == artist.ToLower()) && (songName != null ? song.Song.ToLower().Contains(songName.ToLower()) : 1 == 1))
+                .Where(song => (song.Artist.Equals(artist, StringComparison.CurrentCultureIgnoreCase)) && (songName == null || song.Song.Contains(songName, StringComparison.CurrentCultureIgnoreCase)))
                 .ToList();
 
             List<Song> songs = new List<Song>();
