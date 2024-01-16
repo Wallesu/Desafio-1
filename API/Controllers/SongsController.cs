@@ -17,18 +17,9 @@ namespace API.Controllers
 
         [Route("[controller]")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Song>>> Get(string? artistName, string? search)
+        public async Task<ActionResult<IEnumerable<Song>>> Get(string? artistName, string? songName)
         {
-            var songs = await _songService.GetAllAsync(artistName, search);
-            return Ok(songs);
-
-        }
-
-        [Route("[controller]/Artist/{artistName}")]
-        [HttpGet]
-        public ActionResult<List<Song>> GetByArtist(string artistName, string? search)
-        {
-            List<Song> songs = _songService.GetByArtist(artistName, search);
+            var songs = await _songService.GetAllAsync(artistName, songName);
             return Ok(songs);
 
         }

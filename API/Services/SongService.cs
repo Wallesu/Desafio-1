@@ -16,10 +16,10 @@ namespace API.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Song>> GetAllAsync(string? artist, string? search)
+        public async Task<IEnumerable<Song>> GetAllAsync(string? artist, string? songName)
         {
             var result = _repository.Data
-                .Where(song => (artist != null ? song.Artist.ToLower().Contains(artist.ToLower()) : 1 == 1) && (search != null ? song.Song.ToLower().Contains(search.ToLower()) : 1 == 1));
+                .Where(song => (artist != null ? song.Artist.ToLower().Contains(artist.ToLower()) : 1 == 1) && (songName != null ? song.Song.ToLower().Contains(songName.ToLower()) : 1 == 1));
 
             var songsStr = await Task.FromResult(result);
 
@@ -44,10 +44,10 @@ namespace API.Services
 
             return songs;
         }
-        public List<Song> GetByArtist(string artist, string? search)
+        public List<Song> GetByArtist(string artist, string? songName)
         {
             var songsStr = _repository.Data
-                .Where(song => (song.Artist.ToLower() == artist.ToLower()) && (search != null ? song.Song.ToLower().Contains(search.ToLower()) : 1 == 1))
+                .Where(song => (song.Artist.ToLower() == artist.ToLower()) && (songName != null ? song.Song.ToLower().Contains(songName.ToLower()) : 1 == 1))
                 .ToList();
 
             List<Song> songs = new List<Song>();
