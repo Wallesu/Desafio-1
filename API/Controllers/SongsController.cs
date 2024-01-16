@@ -17,9 +17,9 @@ namespace API.Controllers
 
         [Route("[controller]")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Song>>> Get(string? artistName, string? songName)
+        public ActionResult<IEnumerable<Song>> Get(string? artistName, string? songName, string? genreName)
         {
-            var songs = await _songService.GetAllAsync(artistName, songName);
+            var songs = _songService.GetAll(artistName, songName, genreName);
             return Ok(songs);
 
         }
