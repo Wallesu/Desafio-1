@@ -19,9 +19,9 @@ namespace API.Controllers
 
         [Route("[controller]")]
         [HttpGet]
-        public ActionResult<List<Repository>> Get()
+        public ActionResult<List<Repository>> Get(string? genreName)
         {
-            var artists = _artistService.GetAll();
+            var artists = _artistService.GetAll(genreName);
             return Ok(artists);
 
         }

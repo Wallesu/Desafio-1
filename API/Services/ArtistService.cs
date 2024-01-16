@@ -10,9 +10,10 @@ namespace API.Services
         {
             _repository = repository;
         }
-        public List<Artist> GetAll()
+        public List<Artist> GetAll(string? genreName)
         {
             var artistsStr = _repository.Data
+                .Where(song => genreName != null ? song.Genres.Contains(genreName) : true)
                 .Select(song => song.Artist)
                 .OrderBy(artist => artist)
                 .Distinct();
