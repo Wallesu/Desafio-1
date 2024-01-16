@@ -24,5 +24,14 @@ namespace API.Controllers
             return Ok(repository);
 
         }
+
+        [Route("[controller]/{genreName}/Artists")]
+        [HttpGet]
+        public ActionResult<List<Repository>> GetByGenre(string genreName)
+        {
+            var genres = _artistService.GetByGenre(genreName);
+            return Ok(genres);
+
+        }
     }
 }
