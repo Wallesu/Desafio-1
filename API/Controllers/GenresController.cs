@@ -1,6 +1,7 @@
 ﻿using API.Data;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
+using API.Models;
 
 namespace API.Controllers
 {
@@ -18,7 +19,7 @@ namespace API.Controllers
 
         [Route("[controller]")]
         [HttpGet]
-        public ActionResult<List<Repository>> Get()
+        public ActionResult<List<Genre>> Get()
         {
             var repository = _genreService.GetAll();
             return Ok(repository);
@@ -27,7 +28,7 @@ namespace API.Controllers
 
         [Route("[controller]/{genreName}/Artists")]
         [HttpGet]
-        public ActionResult<List<Repository>> GetByGenre(string genreName)
+        public ActionResult<List<Artist>> GetByGenre(string genreName)
         {
             var genres = _artistService.GetByGenre(genreName);
             return Ok(genres);
