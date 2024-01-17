@@ -5,12 +5,11 @@
 </template>
 
 <script>
-import Musics from './components/Musics.vue'
+  import Musics from './components/Musics.vue'
 
-export default {
-  name: 'App',
-  components: {
-    Musics
+  export default {
+    components: {
+      Musics
+    }
   }
-}
 </script>
