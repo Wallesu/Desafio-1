@@ -17,9 +17,9 @@ namespace API.Controllers
 
         [Route("[controller]")]
         [HttpGet]
-        public ActionResult<IEnumerable<Song>> Get(string? artistName, string? songName, string? genreName)
+        public ActionResult<IEnumerable<Song>> Get(string? artistName, string? songName, string? genreName, string? order)
         {
-            var songs = _songService.GetAll(artistName, songName, genreName);
+            var songs = _songService.GetAll(artistName, songName, genreName, order);
             return Ok(songs);
 
         }

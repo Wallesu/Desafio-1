@@ -16,23 +16,32 @@ namespace API.Services
             _repository = repository;
         }
 
-        public IEnumerable<Song> GetAll(string? artist, string? songName, string? genreName)
+        public IEnumerable<Song> GetAll(string? artist, string? songName, string? genreName, string? order)
         {
-            var songsStr = _repository.Data
-                .Where(song => (
-                        artist == null || song.Artist.ToLower().Contains(artist.ToLower())
+            var query = _repository.Data
+                .Where(data => (
+                        artist == null || data.Artist.ToLower().StartsWith(artist.ToLower())
                     ) &&
                     (
-                        songName == null || song.Song.ToLower().Contains(songName.ToLower())
+                        songName == null || data.Song.ToLower().Contains(songName.ToLower())
                     ) &&
                     (
-                        genreName == null || song.Genres.ToLower().Contains(genreName.ToLower())
+                        genreName == null || data.Genres.ToLower().Contains(genreName.ToLower())
                     )
-                )
-                .ToList();
+                );
+
+            if (order == "desc")
+            {
+                query = query.OrderByDescending(data => data.Song);
+            }
+
+            var result = query.ToList();
+
+                //.OrderBy(song => order == "asc" ? song.Song : false)
+                //.ToList();
 
             List<Song> songs = new List<Song>();
-            foreach (var song in songsStr)
+            foreach (var song in result)
             {
                 string[] genresStr = song.Genres.Split(", ");
                 List<Genre> genres = new List<Genre>();

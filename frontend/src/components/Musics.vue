@@ -23,7 +23,7 @@
                             <!-- Barra de pesquisa -->
                             <div class="w-75 m-md-auto d-flex justify-content-center" role="search">
                                 <input
-                                    v-model="searchGenre"
+                                    v-model="search"
                                     class="form-control me-5 ml-5"
                                     type="search"
                                     placeholder="Search"
@@ -45,8 +45,8 @@
                             <!-- Links -->
                             <div class="offcanvas-body">
                                 <ul class="navbar-nav justify-content-center flex-grow-1 pe-3 mt-4">
-                                    <li @click="sortAZ" class="nav-item">
-                                        <a class="btn btn-link text-success">Songs A-Z</a>
+                                    <li class="nav-item">
+                                        <a class="btn btn-link text-muted">Songs A-Z</a>
                                     </li>
                                     <li @click="showGenres" class="nav-item">
                                         <a class="btn btn-link text-success">Genres</a>
@@ -72,9 +72,9 @@
 
             <tbody>
                 <tr v-for="(music, index) in musics" :key="index">
-                    <td>{{ music.song }}</td>
-                    <td>{{ music.artist }}</td>
-                    <td>{{ music.genre }}</td>
+                    <td>{{ music.name }}</td>
+                    <td>{{ music.artist.name }}</td>
+                    <td>{{ music.genres.map(genre => genre.name).toString() }}</td>
                     <td>{{ music.year }}</td>
                 </tr>
             </tbody>
@@ -91,8 +91,7 @@
     data () {
         return {
             musics: [],
-            searchGenre: '',
-            searchArtist: ''
+            search: '',
         }
     },
 
@@ -103,37 +102,32 @@
     methods: {
         // Externaliza o metodo MusicList. Scope é o escopo que ele está no momento
         MusicList () {
-            axios.get(process.env.VUE_APP_SONGS_API + '/songs.json').then((resp) => {
-                // console.log(resp)
+            axios.get(process.env.VUE_APP_SONGS_API + '/songs').then((resp) => {
                 this.musics = resp.data
             })
         },
 
         SearchByGenre () {
-            axios.post(process.env.VUE_APP_SONGS_API + '/endpoint', {song: this.searchGenre}).then((resp) => {
-                // console.log(resp)
+            axios.get(process.env.VUE_APP_SONGS_API + '/songs?genreName=' + this.search).then((resp) => {
                 this.musics = resp.data
             })
         },
 
         SearchByArtist () {
-            axios.post(process.env.VUE_APP_SONGS_API + '/endpoint', {artist: this.searchArtist}).then((resp) => {
-                // console.log(resp)
+            axios.get(process.env.VUE_APP_SONGS_API + '/songs?artistName=' + this.search).then((resp) => {
                 this.musics = resp.data
             })
         },
-
-        sortAZ(){
-            axios.get(process.env.VUE_APP_SONGS_API + '/endpoint').then((resp) => {
-                // console.log(resp)
-                this.musics = resp.data
-            })
-        },
-
         showGenres(){
-            axios.get(process.env.VUE_APP_SONGS_API + '/endpoint').then((resp) => {
-                // console.log(resp)
-                this.musics = resp.data
+            axios.get(process.env.VUE_APP_SONGS_API + '/genres').then((resp) => {   
+                this.musics = resp.data.map(genre => {
+                    return {
+                        name: '- - - - -',
+                        artist: { name: '- - - - -' },
+                        genres: [ { name: genre.name } ],
+                        year: '- - - - -'
+                    }
+                })
             })
         }
     },
