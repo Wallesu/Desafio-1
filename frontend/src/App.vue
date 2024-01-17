@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <Musics titulo="Songs API" />
+    <Home titulo="Songs API" />
   </div>
 </template>
 
 <script>
-  import Musics from './components/Musics.vue'
+  import Home from './views/Home.vue'
 
   export default {
     components: {
-      Musics
+      Home
     }
   }
 </script>
