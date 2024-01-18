@@ -1,9 +1,6 @@
 ﻿using API.Models;
-using System.Net.Http.Headers;
-using System.Text.Json;
 using API.Data;
 using System.Data;
-using Microsoft.AspNetCore.Mvc;
 
 
 namespace API.Services
@@ -16,77 +13,65 @@ namespace API.Services
             _repository = repository;
         }
 
-        public IEnumerable<Song> GetAll(string? artist, string? songName, string? genreName, string? order)
+        public List<Song> GetAllSongs()
         {
-            var query = _repository.Data
-                .Where(data => (
-                        artist == null || data.Artist.ToLower().StartsWith(artist.ToLower())
-                    ) &&
-                    (
-                        songName == null || data.Song.ToLower().Contains(songName.ToLower())
-                    ) &&
-                    (
-                        genreName == null || data.Genres.ToLower().Contains(genreName.ToLower())
-                    )
-                );
+            var result = _repository.Data.ToList();
+            var songsList = new List<Song>();
 
-            if (order == "desc")
-            {
-                query = query.OrderByDescending(data => data.Song);
-            }
-
-            var result = query.ToList();
-
-                //.OrderBy(song => order == "asc" ? song.Song : false)
-                //.ToList();
-
-            List<Song> songs = new List<Song>();
             foreach (var song in result)
             {
-                string[] genresStr = song.Genres.Split(", ");
-                List<Genre> genres = new List<Genre>();
-                foreach (var genre in genresStr)
-                {
-                    genres.Add(new Genre { Name = genre });
-                }
-
-                songs.Add(new Song
+                songsList.Add(new Song
                 {
                     Name = song.Song,
                     Year = song.Year,
-                    Artist = new Artist { Name = song.Artist },
-                    Genres = genres
+                    Artist = song.Artist,
+                    Genre = song.Genres
                 });
             }
 
-            return songs;
+            return songsList;
         }
-        public List<Song> GetByArtist(string artist, string? songName)
+
+        public List<Song> GetArtistByGenre(string genreName)
         {
-            var songsStr = _repository.Data
-                .Where(song => (song.Artist.Equals(artist, StringComparison.CurrentCultureIgnoreCase)) && (songName == null || song.Song.Contains(songName, StringComparison.CurrentCultureIgnoreCase)))
-                .ToList();
+            var result = _repository.Data.Where(data => data.Genres.ToLower().Contains(genreName.ToLower()));
 
-            List<Song> songs = new List<Song>();
-            foreach (var song in songsStr)
+            var songsList = new List<Song>();
+
+            foreach (var song in result)
             {
-                string[] genresStr = song.Genres.Split(", ");
-                List<Genre> genres = new List<Genre>();
-                foreach (var genre in genresStr)
-                {
-                    genres.Add(new Genre { Name = genre });
-                }
-
-                songs.Add(new Song
+                songsList.Add(new Song 
                 {
                     Name = song.Song,
                     Year = song.Year,
-                    Artist = new Artist { Name = song.Artist },
-                    Genres = genres
+                    Artist = song.Artist,
+                    Genre = song.Genres
                 });
             }
 
-            return songs;
+            return songsList;
+
+        }
+
+        public List<Song> GetSongByArtist(string artist)
+        {
+            var result = _repository.Data
+                .Where(data => (data.Artist.ToLower().StartsWith(artist.ToLower())));
+
+            var songsList = new List<Song>();
+
+            foreach (var song in result)
+            {
+                songsList.Add(new Song
+                {
+                    Name = song.Song,
+                    Year = song.Year,
+                    Artist = song.Artist,
+                    Genre = song.Genres
+                });
+            }
+
+            return songsList;
         }
     }
 }

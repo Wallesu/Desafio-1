@@ -1,6 +1,4 @@
 ﻿using API.Data;
-using API.Models;
-using System.Text.Json;
 
 namespace API.Services
 {
@@ -11,13 +9,19 @@ namespace API.Services
         {
             _repository = repository;
         }
-        public List<Genre> GetAll()
+
+        public List<string> GetAllGenres()
         {
-            var genresStr = _repository.Data.SelectMany(song => song.Genres.Split(", ")).Select(genre => genre.Trim()).Distinct();
-            List<Genre> genres = new List<Genre>();
+            var genresStr = _repository.Data
+                .SelectMany(song => song.Genres.Split(", "))
+                .Select(genre => genre.Trim())
+                .Distinct().ToList();
+
+            var genres = new List<string>();
+
             foreach (var genre in genresStr)
             {
-                genres.Add(new Genre { Name = genre });
+                genres.Add(genre);
             }
 
             return genres;
