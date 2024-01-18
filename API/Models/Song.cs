@@ -4,8 +4,8 @@ namespace API.Models
 {
     public class Song
     {
-        public Artist Artist { get; set; }
-        public List<Genre> Genres { get; set; }
+        public string Artist { get; set; }
+        public string Genre { get; set; }
         public string Name { get; set; }
         public string Year { get; set; }
 
