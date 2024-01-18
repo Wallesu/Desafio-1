@@ -7,7 +7,7 @@ namespace API.Controllers
     [ApiController]
     public class ArtistsController : ControllerBase
     {
-        private SongService _songService;
+        private readonly SongService _songService;
 
         public ArtistsController(SongService songService)
         {
@@ -16,20 +16,16 @@ namespace API.Controllers
 
         [Route("[controller]/search-by-genre/{genreName}")]
         [HttpGet]
-        public ActionResult<List<Song>> GetArtistByGenre(string genreName)
+        public async Task<ActionResult<List<Song>>> GetArtistByGenre(string genreName)
         {
-            var artists = _songService.GetArtistByGenre(genreName);
-            return Ok(artists);
-
+            return Ok(await _songService.GetArtistByGenre(genreName));
         }
 
         [Route("[controller]/search-songs/{artistName}")]
         [HttpGet]
-        public ActionResult<List<Song>> GetSongByArtist(string artistName)
+        public async Task<ActionResult<List<Song>>> GetSongByArtist(string artistName)
         {
-            List<Song> songs = _songService.GetSongByArtist(artistName);
-            return Ok(songs);
-
+            return Ok(await _songService.GetSongByArtist(artistName));
         }
     }
 }

@@ -7,34 +7,34 @@ namespace API.Services
 {
     public class SongService
     {
-        private Repository _repository;
+        private readonly Repository _repository;
         public SongService(Repository repository)
         {
             _repository = repository;
         }
 
-        public List<Song> GetAllSongs()
+        public Task<List<Song>> GetAllSongs()
         {
-            var result = _repository.Data.ToList();
+            var result = _repository.Data;
       
-            return Utils.ListSong(result);
+            return Task.FromResult(Utils.ListSong(result));
         }
 
-        public List<Song> GetArtistByGenre(string genreName)
+        public Task<List<Song>> GetArtistByGenre(string genreName)
         {
             var result = _repository.Data
                 .Where(data => data.Genres.Contains(genreName, CurrentCultureIgnoreCase)).ToList();
 
-            return Utils.ListSong(result);
+            return Task.FromResult(Utils.ListSong(result));
 
         }
 
-        public List<Song> GetSongByArtist(string artist)
+        public Task<List<Song>> GetSongByArtist(string artist)
         {
             var result = _repository.Data
                 .Where(data => (data.Artist.StartsWith(artist, CurrentCultureIgnoreCase))).ToList();
 
-            return Utils.ListSong(result);
+            return Task.FromResult(Utils.ListSong(result));
         }
 
 

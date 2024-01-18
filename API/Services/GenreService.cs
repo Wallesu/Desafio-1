@@ -4,7 +4,7 @@ namespace API.Services
 {
     public class GenreService
     {
-        private Repository _repository;
+        private readonly Repository _repository;
         public GenreService(Repository repository)
         {
             _repository = repository;
