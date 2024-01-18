@@ -13,13 +13,13 @@
             </div>
         
             <div class="w-100 d-flex justify-content-center">
-                <div v-if="selectedTab =='Songs'" class="searchBar">
+                <div v-show="selectedTab =='Songs'" class="searchBar">
                     <SearchBar v-model="search" :isLoading="isLoading.search" :placeholder="searchBy == 'artist' ? 'Search by artists' : 'Search by genres'"/>
                     <div>
-                        <VSelect @selectedValue="searchBy = $event"/>
+                        <VSelect v-model="searchBy"/>
                     </div>
                 </div>
-                <div v-else class="noSearchBar"></div>
+                <div v-show="selectedTab != 'Songs'" class="noSearchBar"></div>
             </div>
             
             <div class="">
@@ -74,7 +74,6 @@
         Warn,
         VGrid
     },
-    // variaveis que vou usar no template
     data () {
         return {
             songs: [],
@@ -104,8 +103,8 @@
     methods: {
         GetSongs(){
             this.isLoading.songs = true
-            axios.get(process.env.VUE_APP_SONGS_API + '/songs').then((response) => {
-                this.songs = response.data
+            axios.get(process.env.VUE_APP_SONGS_API + '/songs/show-all').then((response) => {
+                this.songs = response.data.result
                 this.errors.songsRequest = null
             })
             .catch(error => {
@@ -116,7 +115,12 @@
             })
         },
         SearchSongsByGenre (search) {
-            axios.get(process.env.VUE_APP_SONGS_API + '/songs?genreName=' + search).then(response => {
+            if(!search.length) {
+                this.GetSongs()
+                this.isLoading.search = false
+                return
+            }
+            axios.get(process.env.VUE_APP_SONGS_API + '/artists/search-by-genre/' + search).then(response => {
                 this.songs = response.data
                 this.errors.songsRequest = null
             })
@@ -125,7 +129,12 @@
             })
         },
         SearchSongsByArtist (search) {
-            axios.get(process.env.VUE_APP_SONGS_API + '/songs?artistName=' + search).then(response => {
+            if(!search.length) {
+                this.GetSongs()
+                this.isLoading.search = false
+                return
+            }
+            axios.get(process.env.VUE_APP_SONGS_API + '/artists/search-songs/' + search).then(response => {
                 this.songs = response.data
                 this.errors.songsRequest = null
             })
@@ -135,7 +144,7 @@
         },
         GetGenres(){
             this.isLoading.genres = true
-            axios.get(process.env.VUE_APP_SONGS_API + '/genres').then((resp) => {   
+            axios.get(process.env.VUE_APP_SONGS_API + '/genres/show-all-genres').then((resp) => {   
                 this.genres = resp.data
                 this.errors.genresRequest = null
             })

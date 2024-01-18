@@ -15,10 +15,21 @@ export default {
             selectedValue: 'artist'
         };
     },
-
+    props: {
+        input: {
+            default: 'artist'
+        },
+    },
+    model: {
+        prop: 'input',
+        event: 'emitValue'
+    },
     watch: {
         selectedValue(newValue) {
-            this.$emit('selectedValue', newValue)
+            this.$emit('emitValue', newValue)
+        },
+        input(){
+            this.selectedValue = input
         }
     },
 };

@@ -5,7 +5,7 @@
         </div>
         <div class="grid">
             <div v-for="item in data" class="item">
-                {{ item.name }}
+                {{ item }}
             </div>
         </div>
     </div>

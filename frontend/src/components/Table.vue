@@ -12,9 +12,9 @@
 
             <tbody v-if="data.length && !isLoading">
                 <tr v-for="(song, index) in data" :key="index" class="tr">
-                    <td>{{ song.name || '' }}</td>
-                    <td>{{ song.artist ? song.artist.name : '' }}</td>
-                    <td>{{ song.genres ? song.genres.map(genre => genre.name).toString().replace(',', ', ') : ''}}</td>
+                    <td>{{ song.name }}</td>
+                    <td>{{ song.artist }}</td>
+                    <td>{{ song.genre }}</td>
                     <td>{{ song.year }}</td>
                 </tr>
             </tbody>
