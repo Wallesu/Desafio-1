@@ -1,92 +1,42 @@
 ﻿using API.Models;
-using System.Net.Http.Headers;
-using System.Text.Json;
 using API.Data;
 using System.Data;
-using Microsoft.AspNetCore.Mvc;
-
+using static System.StringComparison;
 
 namespace API.Services
 {
     public class SongService
     {
-        private Repository _repository;
+        private readonly Repository _repository;
         public SongService(Repository repository)
         {
             _repository = repository;
         }
 
-        public IEnumerable<Song> GetAll(string? artist, string? songName, string? genreName, string? order)
+        public Task<List<Song>> GetAllSongs()
         {
-            var query = _repository.Data
-                .Where(data => (
-                        artist == null || data.Artist.ToLower().StartsWith(artist.ToLower())
-                    ) &&
-                    (
-                        songName == null || data.Song.ToLower().Contains(songName.ToLower())
-                    ) &&
-                    (
-                        genreName == null || data.Genres.ToLower().Contains(genreName.ToLower())
-                    )
-                );
-
-            if (order == "desc")
-            {
-                query = query.OrderByDescending(data => data.Song);
-            }
-
-            var result = query.ToList();
-
-                //.OrderBy(song => order == "asc" ? song.Song : false)
-                //.ToList();
-
-            List<Song> songs = new List<Song>();
-            foreach (var song in result)
-            {
-                string[] genresStr = song.Genres.Split(", ");
-                List<Genre> genres = new List<Genre>();
-                foreach (var genre in genresStr)
-                {
-                    genres.Add(new Genre { Name = genre });
-                }
-
-                songs.Add(new Song
-                {
-                    Name = song.Song,
-                    Year = song.Year,
-                    Artist = new Artist { Name = song.Artist },
-                    Genres = genres
-                });
-            }
-
-            return songs;
+            var result = _repository.Data;
+      
+            return Task.FromResult(Utils.ListSong(result));
         }
-        public List<Song> GetByArtist(string artist, string? songName)
+
+        public Task<List<Song>> GetArtistByGenre(string genreName)
         {
-            var songsStr = _repository.Data
-                .Where(song => (song.Artist.Equals(artist, StringComparison.CurrentCultureIgnoreCase)) && (songName == null || song.Song.Contains(songName, StringComparison.CurrentCultureIgnoreCase)))
-                .ToList();
+            var result = _repository.Data
+                .Where(data => data.Genres.Contains(genreName, CurrentCultureIgnoreCase)).ToList();
 
-            List<Song> songs = new List<Song>();
-            foreach (var song in songsStr)
-            {
-                string[] genresStr = song.Genres.Split(", ");
-                List<Genre> genres = new List<Genre>();
-                foreach (var genre in genresStr)
-                {
-                    genres.Add(new Genre { Name = genre });
-                }
+            return Task.FromResult(Utils.ListSong(result));
 
-                songs.Add(new Song
-                {
-                    Name = song.Song,
-                    Year = song.Year,
-                    Artist = new Artist { Name = song.Artist },
-                    Genres = genres
-                });
-            }
-
-            return songs;
         }
+
+        public Task<List<Song>> GetSongByArtist(string artist)
+        {
+            var result = _repository.Data
+                .Where(data => (data.Artist.StartsWith(artist, CurrentCultureIgnoreCase))).ToList();
+
+            return Task.FromResult(Utils.ListSong(result));
+        }
+
+
     }
 }

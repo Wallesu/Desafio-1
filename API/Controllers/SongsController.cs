@@ -1,5 +1,4 @@
 ﻿using API.Services;
-using API.Data;
 using Microsoft.AspNetCore.Mvc;
 using API.Models;
 
@@ -15,11 +14,11 @@ namespace API.Controllers
             _songService = songService;
         }
 
-        [Route("[controller]")]
+        [Route("[controller]/show-all")]
         [HttpGet]
-        public ActionResult<IEnumerable<Song>> Get(string? artistName, string? songName, string? genreName, string? order)
+        public ActionResult<IEnumerable<Song>> Get()
         {
-            var songs = _songService.GetAll(artistName, songName, genreName, order);
+            var songs = _songService.GetAllSongs();
             return Ok(songs);
 
         }

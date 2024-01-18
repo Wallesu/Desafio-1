@@ -1,37 +1,24 @@
-﻿using API.Data;
-using API.Services;
+﻿using API.Services;
 using Microsoft.AspNetCore.Mvc;
-using API.Models;
 
 namespace API.Controllers
 {
     [ApiController]
     public class GenresController : ControllerBase
     {
-        private ArtistService _artistService;
         private GenreService _genreService;
 
-        public GenresController(GenreService genreService, ArtistService artistService)
+        public GenresController(GenreService genreService)
         {
             _genreService = genreService;
-            _artistService = artistService;
         }
 
-        [Route("[controller]")]
+        [Route("[controller]/show-all-genres")]
         [HttpGet]
-        public ActionResult<List<Genre>> Get()
+        public ActionResult<List<string>> GetAllGenres()
         {
-            var repository = _genreService.GetAll();
+            var repository = _genreService.GetAllGenres();
             return Ok(repository);
-
-        }
-
-        [Route("[controller]/{genreName}/Artists")]
-        [HttpGet]
-        public ActionResult<List<Artist>> GetByGenre(string genreName)
-        {
-            var genres = _artistService.GetByGenre(genreName);
-            return Ok(genres);
 
         }
     }

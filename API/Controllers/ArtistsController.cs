@@ -1,5 +1,4 @@
-﻿using API.Data;
-using API.Models;
+﻿using API.Models;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,31 +7,25 @@ namespace API.Controllers
     [ApiController]
     public class ArtistsController : ControllerBase
     {
-        private ArtistService _artistService;
-        private SongService _songService;
+        private readonly SongService _songService;
 
-        public ArtistsController(ArtistService artistService, SongService songService)
+        public ArtistsController(SongService songService)
         {
-            _artistService = artistService;
             _songService = songService;
         }
 
-        [Route("[controller]")]
+        [Route("[controller]/search-by-genre/{genreName}")]
         [HttpGet]
-        public ActionResult<List<Artist>> Get(string? genreName)
+        public async Task<ActionResult<List<Song>>> GetArtistByGenre(string genreName)
         {
-            var artists = _artistService.GetAll(genreName);
-            return Ok(artists);
-
+            return Ok(await _songService.GetArtistByGenre(genreName));
         }
 
-        [Route("[controller]/{artistName}/Songs")]
+        [Route("[controller]/search-songs/{artistName}")]
         [HttpGet]
-        public ActionResult<List<Song>> GetByArtist(string artistName, string? songName)
+        public async Task<ActionResult<List<Song>>> GetSongByArtist(string artistName)
         {
-            List<Song> songs = _songService.GetByArtist(artistName, songName);
-            return Ok(songs);
-
+            return Ok(await _songService.GetSongByArtist(artistName));
         }
     }
 }

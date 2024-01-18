@@ -25,7 +25,6 @@ builder.Services.AddSingleton<Repository>();
 
 builder.Services.AddScoped<SongService>();
 builder.Services.AddScoped<GenreService>();
-builder.Services.AddScoped<ArtistService>();
 
 var app = builder.Build();
 
