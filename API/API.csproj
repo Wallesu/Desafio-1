@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Artist.cs" />
+    <Compile Remove="Models\Genre.cs" />
+    <Compile Remove="Models\Music.cs" />
+    <Compile Remove="Services\ArtistService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
