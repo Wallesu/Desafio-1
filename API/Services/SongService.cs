@@ -1,7 +1,7 @@
 ﻿using API.Models;
 using API.Data;
 using System.Data;
-
+using static System.StringComparison;
 
 namespace API.Services
 {
@@ -16,62 +16,27 @@ namespace API.Services
         public List<Song> GetAllSongs()
         {
             var result = _repository.Data.ToList();
-            var songsList = new List<Song>();
-
-            foreach (var song in result)
-            {
-                songsList.Add(new Song
-                {
-                    Name = song.Song,
-                    Year = song.Year,
-                    Artist = song.Artist,
-                    Genre = song.Genres
-                });
-            }
-
-            return songsList;
+      
+            return Utils.ListSong(result);
         }
 
         public List<Song> GetArtistByGenre(string genreName)
         {
-            var result = _repository.Data.Where(data => data.Genres.ToLower().Contains(genreName.ToLower()));
+            var result = _repository.Data
+                .Where(data => data.Genres.Contains(genreName, CurrentCultureIgnoreCase)).ToList();
 
-            var songsList = new List<Song>();
-
-            foreach (var song in result)
-            {
-                songsList.Add(new Song 
-                {
-                    Name = song.Song,
-                    Year = song.Year,
-                    Artist = song.Artist,
-                    Genre = song.Genres
-                });
-            }
-
-            return songsList;
+            return Utils.ListSong(result);
 
         }
 
         public List<Song> GetSongByArtist(string artist)
         {
             var result = _repository.Data
-                .Where(data => (data.Artist.ToLower().StartsWith(artist.ToLower())));
+                .Where(data => (data.Artist.StartsWith(artist, CurrentCultureIgnoreCase))).ToList();
 
-            var songsList = new List<Song>();
-
-            foreach (var song in result)
-            {
-                songsList.Add(new Song
-                {
-                    Name = song.Song,
-                    Year = song.Year,
-                    Artist = song.Artist,
-                    Genre = song.Genres
-                });
-            }
-
-            return songsList;
+            return Utils.ListSong(result);
         }
+
+
     }
 }
